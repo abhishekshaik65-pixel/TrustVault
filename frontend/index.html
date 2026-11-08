@@ -1,0 +1,801 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrustVault | Secure Document Management</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7f6;
+    color: #24352f;
+}
+
+button, input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+.app {
+    min-height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    width: 235px;
+    background: #183d35;
+    color: white;
+    padding: 28px 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 5px 10px 8px;
+}
+
+.brand-sub {
+    color: #b8d0c7;
+    font-size: 12px;
+    margin: 0 10px 40px;
+}
+
+.nav-item {
+    padding: 14px;
+    margin-bottom: 9px;
+    border-radius: 9px;
+    color: #d9e8e2;
+    cursor: pointer;
+}
+
+.nav-item.active,
+.nav-item:hover {
+    background: #287665;
+    color: white;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+}
+
+.main {
+    flex: 1;
+    min-width: 0;
+    padding: 28px 35px;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.topbar h2 {
+    font-size: 25px;
+}
+
+.user-label {
+    background: white;
+    padding: 11px 17px;
+    border-radius: 25px;
+    color: #287665;
+    font-size: 13px;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h1 {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.muted {
+    color: #77877f;
+    font-size: 14px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card, .panel {
+    background: white;
+    border-radius: 13px;
+    padding: 23px;
+    box-shadow: 0 3px 14px rgba(25, 55, 45, 0.06);
+}
+
+.stat-card p {
+    color: #78877f;
+    font-size: 14px;
+}
+
+.stat-card h2 {
+    font-size: 27px;
+    margin-top: 12px;
+    color: #246b5b;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
+    gap: 20px;
+}
+
+.panel h3 {
+    margin-bottom: 17px;
+}
+
+.search {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e1e8e4;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    outline-color: #287665;
+}
+
+.upload-area {
+    border: 2px dashed #b8d4c9;
+    border-radius: 12px;
+    padding: 30px 15px;
+    text-align: center;
+    background: #f8fbf9;
+}
+
+.upload-icon {
+    font-size: 35px;
+    margin-bottom: 12px;
+}
+
+.upload-area p {
+    color: #77877f;
+    font-size: 13px;
+    margin: 10px 0 18px;
+}
+
+input[type="file"] {
+    width: 100%;
+    margin: 12px 0;
+    font-size: 13px;
+}
+
+.primary-btn {
+    background: #287665;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+}
+
+.primary-btn:hover {
+    background: #1d5b4d;
+}
+
+.secondary-btn {
+    background: #eaf3ef;
+    color: #246b5b;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.danger-btn {
+    background: #fff0ee;
+    color: #c4483d;
+    padding: 9px 12px;
+    border-radius: 7px;
+}
+
+.document-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 0;
+    border-bottom: 1px solid #edf0ee;
+}
+
+.document-name {
+    overflow-wrap: anywhere;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.document-actions {
+    display: flex;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.message {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #287665;
+    overflow-wrap: anywhere;
+}
+
+.auth-wrap {
+    max-width: 480px;
+    margin: 65px auto;
+}
+
+.auth-card {
+    background: white;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(25,55,45,.09);
+}
+
+.auth-card h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.auth-card .muted {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.auth-card h3 {
+    margin: 18px 0 12px;
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 12px;
+    border: 1px solid #dfe7e2;
+    border-radius: 8px;
+    outline-color: #287665;
+}
+
+.auth-card button {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.footer-note {
+    text-align: center;
+    color: #8b9992;
+    font-size: 12px;
+    margin-top: 28px;
+}
+
+@media(max-width: 850px) {
+    .sidebar {
+        width: 175px;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 600px) {
+    .sidebar {
+        width: 65px;
+        padding: 20px 7px;
+    }
+
+    .brand {
+        font-size: 17px;
+        margin: 5px 2px 30px;
+    }
+
+    .brand-sub {
+        display: none;
+    }
+
+    .nav-item {
+        font-size: 0;
+        text-align: center;
+        padding: 13px 3px;
+    }
+
+    .nav-item span {
+        font-size: 19px;
+    }
+
+    .main {
+        padding: 18px 12px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-wrap {
+        margin: 25px auto;
+    }
+
+    .auth-card {
+        padding: 22px;
+    }
+
+    .document-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">TrustVault</div>
+        <div class="brand-sub">Secure Document Management</div>
+
+        <div class="nav-item active" onclick="showSection('dashboard')">
+            <span>▦</span> Dashboard
+        </div>
+
+        <div class="nav-item" onclick="showSection('documents')">
+            <span>▤</span> My Documents
+        </div>
+
+        <div class="nav-item" onclick="showSection('upload')">
+            <span>⇧</span> Upload Files
+        </div>
+
+        <div class="sidebar-bottom">
+            <div class="nav-item" onclick="logout()">
+                <span>↪</span> Logout
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+            <h2>TrustVault Dashboard</h2>
+            <div class="user-label" id="userLabel">Guest User</div>
+        </div>
+
+        <!-- LOGIN AND REGISTRATION -->
+
+        <section id="authSection" class="auth-wrap">
+            <div class="auth-card">
+
+                <h2>Welcome to TrustVault</h2>
+                <p class="muted">
+                    Your documents, organized and protected.
+                </p>
+
+                <h3>Login</h3>
+
+                <input id="username"
+                       type="text"
+                       placeholder="Username">
+
+                <input id="password"
+                       type="password"
+                       placeholder="Password">
+
+                <button class="primary-btn" onclick="login()">
+                    Sign In
+                </button>
+
+                <p id="message" class="message"></p>
+
+                <hr style="margin:22px 0; border:0; border-top:1px solid #eee;">
+
+                <h3>Create Account</h3>
+
+                <input id="regUsername"
+                       type="text"
+                       placeholder="Choose Username">
+
+                <input id="regPassword"
+                       type="password"
+                       placeholder="Choose Password">
+
+                <button class="secondary-btn" onclick="registerUser()">
+                    Register
+                </button>
+
+                <p id="registerMessage" class="message"></p>
+
+            </div>
+        </section>
+
+        <!-- DASHBOARD -->
+
+        <section id="dashboardSection" class="hidden">
+
+            <div class="welcome">
+                <h1>Welcome Back! 👋</h1>
+                <p class="muted">
+                    Manage your documents from one secure place.
+                </p>
+            </div>
+
+            <div class="stats">
+
+                <div class="stat-card">
+                    <p>Total Documents</p>
+                    <h2 id="documentCount">0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Account Status</p>
+                    <h2 style="font-size:21px;">Active</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Security</p>
+                    <h2 style="font-size:21px;">JWT Protected</h2>
+                </div>
+
+            </div>
+
+            <div class="content-grid">
+
+                <section class="panel" id="documentsPanel">
+                    <h3>My Documents</h3>
+
+                    <input
+                        class="search"
+                        id="searchDocument"
+                        type="text"
+                        placeholder="Search your documents..."
+                        oninput="searchDocuments()"
+                    >
+
+                    <button class="secondary-btn"
+                            onclick="loadDocuments()">
+                        ↻ Refresh Documents
+                    </button>
+
+                    <div id="documentsList" style="margin-top:15px;">
+                        No documents loaded.
+                    </div>
+
+                </section>
+
+                <section class="panel" id="uploadPanel">
+                    <h3>Upload Document</h3>
+
+                    <div class="upload-area">
+                        <div class="upload-icon">☁️</div>
+
+                        <h3>Upload your files</h3>
+
+                        <p>Select a document from your device.</p>
+
+                        <input type="file" id="file">
+
+                        <button class="primary-btn"
+                                onclick="uploadDocument()">
+                            Upload Document
+                        </button>
+
+                        <p id="uploadMessage" class="message"></p>
+                    </div>
+                </section>
+
+            </div>
+
+        </section>
+
+        <div class="footer-note">
+            TrustVault | Secure Document Management System
+        </div>
+
+    </main>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+function showDashboard() {
+    document.getElementById("authSection").classList.add("hidden");
+    document.getElementById("dashboardSection").classList.remove("hidden");
+    document.getElementById("userLabel").innerText = "Authenticated User";
+    loadDocuments();
+}
+
+function showSection(section) {
+    if (!localStorage.getItem("token")) {
+        alert("Please login first.");
+        return;
+    }
+
+    if (section === "upload") {
+        document.getElementById("uploadPanel").scrollIntoView({
+            behavior: "smooth"
+        });
+    } else if (section === "documents") {
+        document.getElementById("documentsPanel").scrollIntoView({
+            behavior: "smooth"
+        });
+    } else {
+        window.scrollTo({top: 0, behavior: "smooth"});
+    }
+}
+
+async function login() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!username || !password) {
+        document.getElementById("message").innerText =
+            "Enter your username and password.";
+        return;
+    }
+
+    try {
+        const response = await fetch(API + "/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username, password})
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            document.getElementById("message").innerText =
+                data.detail || "Login failed";
+            return;
+        }
+
+        localStorage.setItem("token", data.access_token);
+        showDashboard();
+
+    } catch (error) {
+        document.getElementById("message").innerText =
+            "Cannot connect to server. Start the backend first.";
+    }
+}
+
+function logout() {
+    localStorage.removeItem("token");
+
+    document.getElementById("dashboardSection").classList.add("hidden");
+    document.getElementById("authSection").classList.remove("hidden");
+
+    document.getElementById("userLabel").innerText = "Guest User";
+    document.getElementById("documentsList").innerHTML = "";
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("message").innerText =
+        "Logged out successfully!";
+}
+
+async function registerUser() {
+    const username = document.getElementById("regUsername").value.trim();
+    const password = document.getElementById("regPassword").value;
+
+    if (!username || !password) {
+        document.getElementById("registerMessage").innerText =
+            "Enter a username and password.";
+        return;
+    }
+
+    try {
+        const response = await fetch(API + "/register", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username, password})
+        });
+
+        const data = await response.json();
+
+        document.getElementById("registerMessage").innerText =
+            data.message || data.detail ||
+            (response.ok ? "Registration successful!" : "Registration failed");
+
+    } catch (error) {
+        document.getElementById("registerMessage").innerText =
+            "Cannot connect to server.";
+    }
+}
+
+async function uploadDocument() {
+    const file = document.getElementById("file").files[0];
+    const token = localStorage.getItem("token");
+    const message = document.getElementById("uploadMessage");
+
+    if (!token) {
+        message.innerText = "Please login first.";
+        return;
+    }
+
+    if (!file) {
+        message.innerText = "Please select a document.";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch(API + "/upload", {
+            method: "POST",
+            headers: {"Authorization": "Bearer " + token},
+            body: formData
+        });
+
+        const data = await response.json();
+
+        message.innerText =
+            data.message || data.detail ||
+            (response.ok ? "Upload successful!" : "Upload failed");
+
+        if (response.ok) {
+            document.getElementById("file").value = "";
+            await loadDocuments();
+        }
+
+    } catch (error) {
+        message.innerText = "Upload failed. Check backend connection.";
+    }
+}
+
+async function loadDocuments() {
+    const token = localStorage.getItem("token");
+    const list = document.getElementById("documentsList");
+
+    if (!token) {
+        list.innerText = "Please login first.";
+        return;
+    }
+
+    list.innerText = "Loading documents...";
+
+    try {
+        const response = await fetch(API + "/documents", {
+            headers: {"Authorization": "Bearer " + token}
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            list.innerText = data.detail || "Unable to load documents.";
+            return;
+        }
+
+        list.innerHTML = "";
+
+        const docs = data.documents || [];
+        document.getElementById("documentCount").innerText = docs.length;
+
+        if (docs.length === 0) {
+            list.innerText = "No documents found. Upload your first document!";
+            return;
+        }
+
+        docs.forEach(doc => {
+            const row = document.createElement("div");
+            row.className = "document-row";
+
+            const name = document.createElement("div");
+            name.className = "document-name";
+            name.textContent = "📄 " + doc.filename;
+
+            const actions = document.createElement("div");
+            actions.className = "document-actions";
+
+            const downloadBtn = document.createElement("button");
+            downloadBtn.className = "secondary-btn";
+            downloadBtn.textContent = "Download";
+
+            downloadBtn.onclick = async () => {
+                try {
+                    const result = await fetch(
+                        API + "/download/" + doc.id,
+                        {headers: {"Authorization": "Bearer " + token}}
+                    );
+
+                    if (!result.ok) {
+                        alert("Download failed. Please log in again.");
+                        return;
+                    }
+
+                    const blob = await result.blob();
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+
+                    link.href = url;
+                    link.download = doc.filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+                } catch (error) {
+                    alert("Unable to download document.");
+                }
+            };
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "danger-btn";
+            deleteBtn.textContent = "Delete";
+
+            deleteBtn.onclick = async () => {
+                if (!confirm("Are you sure you want to delete this document?")) {
+                    return;
+                }
+
+                try {
+                    const result = await fetch(
+                        API + "/documents/" + doc.id,
+                        {
+                            method: "DELETE",
+                            headers: {"Authorization": "Bearer " + token}
+                        }
+                    );
+
+                    const resultData = await result.json();
+
+                    if (result.ok) {
+                        await loadDocuments();
+                    } else {
+                        alert(resultData.detail || "Delete failed.");
+                    }
+
+                } catch (error) {
+                    alert("Unable to delete document.");
+                }
+            };
+
+            actions.appendChild(downloadBtn);
+            actions.appendChild(deleteBtn);
+
+            row.appendChild(name);
+            row.appendChild(actions);
+            list.appendChild(row);
+        });
+
+        searchDocuments();
+
+    } catch (error) {
+        list.innerText = "Unable to connect to backend.";
+    }
+}
+
+function searchDocuments() {
+    const value = document.getElementById("searchDocument")
+        .value.toLowerCase();
+
+    document.querySelectorAll(".document-row").forEach(row => {
+        row.style.display =
+            row.innerText.toLowerCase().includes(value) ? "flex" : "none";
+    });
+}
+
+// Restore the dashboard if a saved login token exists.
+if (localStorage.getItem("token")) {
+    showDashboard();
+}
+</script>
+
+</body>
+</html>
